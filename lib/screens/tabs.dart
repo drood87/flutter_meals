@@ -47,15 +47,18 @@ class _TabsScreenState extends State<TabsScreen> {
     });
   }
 
-  void _setScreen(String identifier) {
+  void _setScreen(String identifier) async {
     Navigator.of(context).pop();
+    // pushReplacement does not stack a new screen on top but replaces it *duuuhhh*
     if (identifier == 'filters') {
-      // pushReplacement does not stack a new screen on top but replaces it *duuuhhh*
-      Navigator.of(context).push(
+      // we can save the future coming back from the filters screen now where we saved it in the filters screen
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
           builder: (ctx) => const FiltersScreen(),
         ),
       );
+
+      print(result);
       return;
     }
   }
