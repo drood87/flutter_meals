@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,7 +15,13 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(const App());
+  runApp(
+    // ProviderScope makes sure all Providers are accessible in the app
+    // we could also just wrap a certain part of the app if we just need it there.
+    const ProviderScope(
+      child: App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
