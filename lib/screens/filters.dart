@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals/providers/filters_provider.dart';
 // import 'package:meals/screens/tabs.dart';
 // import 'package:meals/widgets/main_drawer.dart';
 
-
-
 class FiltersScreen extends ConsumerStatefulWidget {
   const FiltersScreen({
-    required this.currentFilters,
     super.key,
   });
 
-  final Map<Filter, bool> currentFilters;
-
   @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
+  ConsumerState<FiltersScreen> createState() => _FiltersScreenState();
 }
 
 class _FiltersScreenState extends ConsumerState<FiltersScreen> {
@@ -28,11 +24,11 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   @override
   void initState() {
     super.initState();
-
-    _isGlutenFree = widget.currentFilters[Filter.glutenFree]!;
-    _isLactoseFree = widget.currentFilters[Filter.lactoseFree]!;
-    _isVegan = widget.currentFilters[Filter.vegan]!;
-    _isVegetarian = widget.currentFilters[Filter.vegetarian]!;
+    final activeFilters = ref.read(filtersProvider);
+    _isGlutenFree = activeFilters[Filter.glutenFree]!;
+    _isLactoseFree = activeFilters[Filter.lactoseFree]!;
+    _isVegan = activeFilters[Filter.vegan]!;
+    _isVegetarian = activeFilters[Filter.vegetarian]!;
   }
 
   @override
@@ -57,13 +53,14 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
         // it not to go back but we do it manually with the navigator pop
         // https://api.flutter.dev/flutter/widgets/WillPopScope-class.html
         onWillPop: () async {
-          Navigator.of(context).pop({
+          ref.read(filtersProvider.notifier).setFilters({
             Filter.glutenFree: _isGlutenFree,
             Filter.lactoseFree: _isLactoseFree,
             Filter.vegan: _isVegan,
             Filter.vegetarian: _isVegetarian,
           });
-          return false;
+          // Navigator.of(context).pop();
+          return true;
         },
         child: Column(
           children: [
